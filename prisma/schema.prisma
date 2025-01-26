@@ -1,0 +1,60 @@
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Targetas {
+    visa
+    master
+}
+
+model CategoriaPago {
+    id          String @id @default(auto()) @map("_id") @db.ObjectId
+    descripcion String @unique
+}
+
+model Gasto {
+    id          String @id @default(auto()) @map("_id") @db.ObjectId
+    descripcion String
+    monto       Float
+    fecha       DateTime
+    categoria   String
+    gastoC      GastoC? @relation(fields: [gastoCId], references: [id])
+    gastoCId    String? @unique @db.ObjectId
+    gastoD      GastoD? @relation(fields: [gastoDId], references: [id])
+    gastoDId    String? @unique @db.ObjectId
+    gastoE      GastoE? @relation(fields: [gastoEId], references: [id])
+    gastoEId    String? @unique @db.ObjectId
+}
+
+model GastoC {
+    id      String @id @default(auto()) @map("_id") @db.ObjectId
+    cuotas      Int
+    gasto       Gasto?
+    targetaC    TargetaC @relation(fields: [targetaCId], references: [id])
+    targetaCId  String @unique @db.ObjectId
+}
+
+model GastoD {
+    id      String @id @default(auto()) @map("_id") @db.ObjectId
+    gastos  Gasto[]
+}
+
+model GastoE {
+    id      String @id @default(auto()) @map("_id") @db.ObjectId
+    gatos   Gasto[]
+}
+
+model TargetaC {
+    id              String @id @default(auto()) @map("_id") @db.ObjectId
+    nombre          Targetas
+    cierre          DateTime
+    vencimiento     DateTime
+    limite          Float
+    disponibilidad  Float
+    gastosC         GastoC[]
+}
