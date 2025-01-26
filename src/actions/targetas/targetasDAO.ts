@@ -52,10 +52,22 @@ export const getTargeta= async(targeta: Targetas) =>{
                 nombre: targeta
             }
         })
-
+        
         return targetaEncontrada
     } catch (error) {
-        
+        console.log('error al obtener targeta')
+        console.log(''+error)
+    }
+}
+
+export const getAllTargetas = async() =>{
+    try {
+        const targetas = await prisma.targetaC.findMany({})
+
+        return targetas
+    } catch (error) {
+        console.log('error al obtener todas las targetas')
+        console.log(''+error)
     }
 }
 
