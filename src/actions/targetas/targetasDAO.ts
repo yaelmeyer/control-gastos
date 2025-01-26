@@ -60,6 +60,28 @@ export const getTargeta= async(targeta: Targetas) =>{
     }
 }
 
+export const getTargetaAndGastos = async(nombre: Targetas) =>{
+    try {
+        const targeta = await prisma.targetaC.findFirst({
+            include:{
+                gastosC: {
+                    include:{
+                        gasto: true
+                    }
+                }
+            },
+            where:{
+                nombre: nombre
+            }
+        })
+
+        return targeta
+    } catch (error) {
+        console.log('error al obtener targetas y gastos')
+        console.log(''+error)   
+    }
+}
+
 export const getAllTargetas = async() =>{
     try {
         const targetas = await prisma.targetaC.findMany({})
