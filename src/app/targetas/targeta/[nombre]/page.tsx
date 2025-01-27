@@ -6,7 +6,8 @@ interface Props{
 }
 
 export default async function TargetaPage({params}:Props) {
-  const nombre = params.nombre == Targetas.visa ? Targetas.visa : Targetas.master
+  const param = await params
+  const nombre = param.nombre == Targetas.visa ? Targetas.visa : Targetas.master
   const targeta = await getTargetaAndGastos(nombre)
   const fechaActual = new Date()
   const mesActual = new Intl.DateTimeFormat('es-ES', {month:'long'}).format(fechaActual)

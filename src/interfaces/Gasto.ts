@@ -1,4 +1,4 @@
-import { Modo, Targetas } from '@prisma/client';
+import { Targetas } from '@prisma/client';
 
 export interface Gasto{
     descripcion : string
