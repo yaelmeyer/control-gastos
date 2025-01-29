@@ -1,4 +1,5 @@
 import { getTargeta, getTargetaAndGastos } from "@/actions/targetas/targetasDAO";
+import TargetaMesPage from "@/components/targetaMes";
 import { Targetas } from "@prisma/client";
 
 interface Props{
@@ -12,10 +13,26 @@ export default async function TargetaPage({params}:Props) {
   const fechaActual = new Date()
   const mesActual = new Intl.DateTimeFormat('es-ES', {month:'long'}).format(fechaActual)
 
+//funciones
+const calcularDisponibilidad=():number=>{
+  const total = targeta!.gastosC
+      .map((gastoc:any) => gastoc.gasto.monto)
+      .reduce((sum:number, monto:number) => sum + monto, 0)
+  
+      return total
+}
+//fin funciones
+
   return (
     <div className="text-5xl">
-        <span>{targeta?.nombre}</span>
+      <div className="flex items-center">
+        <span>{targeta?.nombre}  </span>
         <span>  {mesActual}</span>
+        <div className="ml-auto text-right">
+          <span className="text-2xl">Limite: {targeta?.limite}</span>
+          <span className="text-2xl">  Disponibilidad: {targeta?.limite! - calcularDisponibilidad()}</span>
+        </div>
+      </div>
         <table className="table-auto w-full border-collapse border border-gray-300">
           <thead>
             <tr className="bg-gray-200 text-gray-700 text-xl">
@@ -38,6 +55,8 @@ export default async function TargetaPage({params}:Props) {
             }
           </tbody>
         </table>
+        <hr />
+        <TargetaMesPage targeta={targeta}></TargetaMesPage>
     </div>
   );
 }

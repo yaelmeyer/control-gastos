@@ -9,5 +9,6 @@ export interface Gasto{
 
 export interface CompraCredito{
     cuotas      : number
-    targeta    : Targetas
+    targeta     : Targetas
+    cuotaActual : number
 }

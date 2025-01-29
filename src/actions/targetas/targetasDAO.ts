@@ -15,6 +15,7 @@ export const newGastoC = async(gasto: Gasto, infoCompra: CompraCredito) =>{
         gastoC = await prisma.gastoC.create({ 
             data:{
                 cuotas: infoCompra.cuotas,
+                cuotaActual : infoCompra.cuotaActual,
                 targetaC: {
                     connect: {id: targeta?.id}
                 }

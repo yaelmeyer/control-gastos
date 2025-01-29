@@ -14,13 +14,17 @@ type FormValues = {
   categoria   : string,
   fecha       : Date,
   cuota       : number,
-  Targeta     : Targetas
+  Targeta     : Targetas,
+  gastoNuevo  : boolean,
+  cuotaActual  : number
 }
 
 export default function NewGastoPage() {
   const router = useRouter()
-  const {register, handleSubmit, formState:{errors}} = useForm<FormValues>()
+  const {register, handleSubmit, formState:{errors}, watch} = useForm<FormValues>()
   const [guardado, setGuardado] = useState(false)
+
+  const gastoNuevo = watch('gastoNuevo')
 
 
   const onSubmit = async(data:FormValues) =>{
@@ -33,11 +37,11 @@ export default function NewGastoPage() {
     }
     const infoCompra:CompraCredito ={
       cuotas: +data.cuota,
+      cuotaActual : +(data.gastoNuevo) ? 1 : +data.cuotaActual,
       targeta: data.Targeta
     }
     const gasto = await newGastoC(newGasto, infoCompra)
     setGuardado(true)
-    console.log('a enviar '+data.Targeta)
     router.push(`/targetas/targeta/${data.Targeta}`)
   }
   return (
@@ -90,6 +94,24 @@ export default function NewGastoPage() {
               ))}
             </select>
           </div>
+          <div>
+            <label className="block font-semibold" htmlFor="gastoNuevo">Targeta</label>
+            <select id="gastoNuevo" defaultValue="" 
+              {...register('gastoNuevo', {required: 'gastoNuevo es obligatorio'})}
+            >
+                <option key={1} value={1}>Gasto Nuevo</option>
+                <option key={2} value={0}>Gasto Viejo</option>
+            </select>
+          </div>
+          {gastoNuevo == false &&(
+            <div>
+              <label className="block font-semibold" htmlFor="cuotaActual">Cuota</label>
+              <input type="number" id="cuotaVieja" 
+                {...register('cuotaActual', {required: 'cuotaActual es obligaroria'})}
+              />
+              {errors.cuota && <p className="text-red-500">{errors.cuota?.message}</p>}
+            </div>
+          )}
           <button type="submit">Guardar</button>
         </form>)
         :(<span>guardado</span>)
