@@ -36,6 +36,7 @@ model GastoC {
     cuotas      Int
     cuotaActual Int?
     gasto       Gasto?
+    terminado   Boolean
     targetaC    TargetaC @relation(fields: [targetaCId], references: [id])
     targetaCId  String @unique @db.ObjectId
 }

@@ -40,6 +40,7 @@ const calcularDisponibilidad=():number=>{
               <th className="border border-gray-300 px-4 py-2 text-left">Monto</th>
               <th className="border border-gray-300 px-4 py-2 text-left">Fecha</th>
               <th className="border border-gray-300 px-4 py-2 text-left">cuotas</th>
+              <th className="border border-gray-300 px-4 py-2 text-left">cuota Actual</th>
             </tr>
           </thead>
           <tbody>
@@ -50,6 +51,7 @@ const calcularDisponibilidad=():number=>{
                   <td className="border border-gray-300 px-4 py-2">${gastoC.gasto?.monto}</td>
                   <td className="border border-gray-300 px-4 py-2">{gastoC.gasto?.fecha.toLocaleDateString()}</td>
                   <td className="border border-gray-300 px-4 py-2">{gastoC.cuotas}</td>
+                  <td className="border border-gray-300 px-4 py-2">{gastoC.cuotaActual}</td>
                 </tr>
               ))
             }

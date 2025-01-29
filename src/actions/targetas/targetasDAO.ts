@@ -16,6 +16,7 @@ export const newGastoC = async(gasto: Gasto, infoCompra: CompraCredito) =>{
             data:{
                 cuotas: infoCompra.cuotas,
                 cuotaActual : infoCompra.cuotaActual,
+                terminado   : false,
                 targetaC: {
                     connect: {id: targeta?.id}
                 }
@@ -65,7 +66,11 @@ export const getTargetaAndGastos = async(nombre: Targetas) =>{
     try {
         const targeta = await prisma.targetaC.findFirst({
             include:{
-                gastosC: {
+                gastosC: 
+                {
+                    where: {
+                        terminado: false
+                    },
                     include:{
                         gasto: true
                     }
