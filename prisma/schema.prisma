@@ -34,7 +34,9 @@ model Gasto {
 model GastoC {
     id      String @id @default(auto()) @map("_id") @db.ObjectId
     cuotas      Int
+    cuotaActual Int?
     gasto       Gasto?
+    terminado   Boolean
     targetaC    TargetaC @relation(fields: [targetaCId], references: [id])
     targetaCId  String @unique @db.ObjectId
 }
