@@ -99,6 +99,27 @@ export const getAllTargetas = async() =>{
     }
 }
 
+export const deleteGasto = async(idGasto:string, idGastoC:string) => {
+    try {
+        const gastoEliminado = await prisma.gasto.delete({
+            where:{
+                id: idGasto
+            }
+        })
+
+        const gastoCEliminado = await prisma.gastoC.delete({
+            where: {
+                id: idGastoC
+            }
+        })
+
+        return [gastoEliminado,gastoCEliminado]
+    } catch (error) {
+        console.log('error al eliminar gastoC')
+        console.log(''+error)
+    }
+}
+
 //solo desarrollo
 //TODO eliminar
 const crearTergetaC = async() =>{
