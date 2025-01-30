@@ -1,6 +1,9 @@
-import { getTargeta, getTargetaAndGastos } from "@/actions/targetas/targetasDAO";
+import { getTargetaAndGastos } from "@/actions/targetas/targetasDAO";
 import TargetaMesPage from "@/components/targetaMes";
 import { Targetas } from "@prisma/client";
+import Link from "next/link";
+import { CiEdit } from "react-icons/ci";
+import { RiDeleteBin2Line } from "react-icons/ri";
 
 interface Props{
     params : {nombre:string}
@@ -41,6 +44,8 @@ const calcularDisponibilidad=():number=>{
               <th className="border border-gray-300 px-4 py-2 text-left">Fecha</th>
               <th className="border border-gray-300 px-4 py-2 text-left">cuotas</th>
               <th className="border border-gray-300 px-4 py-2 text-left">cuota Actual</th>
+              <th className="border border-gray-300 px-4 py-2 text-left">Editar</th>
+              <th className="border border-gray-300 px-4 py-2 text-left">Eliminar</th>
             </tr>
           </thead>
           <tbody>
@@ -52,6 +57,8 @@ const calcularDisponibilidad=():number=>{
                   <td className="border border-gray-300 px-4 py-2">{gastoC.gasto?.fecha.toLocaleDateString()}</td>
                   <td className="border border-gray-300 px-4 py-2">{gastoC.cuotas}</td>
                   <td className="border border-gray-300 px-4 py-2">{gastoC.cuotaActual}</td>
+                  <td className="border border-gray-300 px-4 py-2"><Link href={`/formularios/newgastoc?update=1&idGastoC=${gastoC.id}`}><CiEdit/></Link></td>
+                  <td className="border border-gray-300 px-4 py-2"><RiDeleteBin2Line/></td>
                 </tr>
               ))
             }

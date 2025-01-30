@@ -20,12 +20,13 @@ type FormValues = {
 }
 
 interface Props{
-    gasto?   : Gasto,
-    gastoC?  : CompraCredito
+    gasto?  : Gasto,
+    gastoC? : CompraCredito,
+    update  : boolean   
 }
 
-export default function NewGastoFromPage({gasto, gastoC}: Props) {
-    const update:boolean = gasto && gastoC ? true : false
+export default function NewGastoFromPage({gasto, gastoC, update}: Props) {
+    // const update:boolean = gasto && gastoC ? true : false
     console.log('update: '+ update)
     const router = useRouter()
     const {register, handleSubmit, formState:{errors}, watch} = useForm<FormValues>()

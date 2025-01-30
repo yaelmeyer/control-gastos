@@ -6,6 +6,24 @@ import { CompraCredito, Gasto } from "@/interfaces/Gasto"
 import { Targetas } from '@prisma/client'
 import { NextResponse } from 'next/server';
 
+export const getGastoC = async(id: string) =>{
+    try {
+        const gastoC = await prisma.gastoC.findFirst({
+            include:{
+                gasto: true
+            },
+            where: {
+                id: id
+            }
+        })
+
+        return gastoC
+    } catch (error) {
+        console.log('error al obtener el gastoC')
+        console.log(error)
+    }
+}
+
 export const newGastoC = async(gasto: Gasto, infoCompra: CompraCredito) =>{
     const {...nuevoGasto} = gasto
     let targeta = await getTargeta(infoCompra.targeta)
@@ -118,6 +136,10 @@ export const deleteGasto = async(idGasto:string, idGastoC:string) => {
         console.log('error al eliminar gastoC')
         console.log(''+error)
     }
+}
+
+export const updateGasto = async(idGasto:string, idGastoC:string, gasto:Gasto, gastoC:CompraCredito) =>{
+
 }
 
 //solo desarrollo
