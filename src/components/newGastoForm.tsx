@@ -1,8 +1,7 @@
 'use client'
 
-import { newGastoC } from "@/actions/targetas/targetasDAO"
-import { CompraCredito, Gasto } from "@/interfaces/Gasto"
-import { Targetas } from "@prisma/client"
+import { newGastoC, updateGasto } from "@/actions/targetas/targetasDAO"
+import { Gasto, GastoC, Targetas } from "@prisma/client"
 import { useRouter } from "next/navigation"
 import { log } from "node:console"
 import { useState } from "react"
@@ -21,13 +20,15 @@ type FormValues = {
 
 interface Props{
     gasto?  : Gasto,
-    gastoC? : CompraCredito,
+    gastoC? : GastoC,
     update  : boolean   
 }
 
 export default function NewGastoFromPage({gasto, gastoC, update}: Props) {
     // const update:boolean = gasto && gastoC ? true : false
     console.log('update: '+ update)
+    console.log('gasto ',gasto)
+    console.log('gastoC ', gastoC)
     const router = useRouter()
     const {register, handleSubmit, formState:{errors}, watch} = useForm<FormValues>()
     const [guardado, setGuardado] = useState(false)
@@ -36,18 +37,24 @@ export default function NewGastoFromPage({gasto, gastoC, update}: Props) {
 
     const onSubmit = async(data:FormValues) =>{
         console.log(data)
-        const newGasto: Gasto = {
+        const newGasto = {
+          id : gasto?.id,
           descripcion: data.descripcion,
           monto: +data.monto,
           fecha: new Date(data.fecha),
           categoria: data.categoria
         }
-        const infoCompra:CompraCredito ={
+        const infoCompra = {
+            id: gastoC?.id,
           cuotas: +data.cuota,
           cuotaActual : +(data.gastoNuevo) ? 1 : +data.cuotaActual,
           targeta: data.Targeta
         }
-        const gasto = await newGastoC(newGasto, infoCompra)
+        if(!update)
+            await newGastoC(newGasto, infoCompra)
+        else
+            await updateGasto(newGasto, infoCompra)
+
         setGuardado(true)
         router.push(`/targetas/targeta/${data.Targeta}`)
       }
@@ -59,7 +66,7 @@ export default function NewGastoFromPage({gasto, gastoC, update}: Props) {
         <div>
             <label className="block font-semibold" htmlFor="descripcion">Descripcion</label>
             <input type="text" id="descripcion"     
-                    value={update? gasto?.descripcion: ''}               
+                    defaultValue={update? gasto?.descripcion: ''}               
                     {...register('descripcion', {required: !update? 'la descripcion es obligatorio' : false})}
             />
             {errors.descripcion && <p className="text-red-500">{errors.descripcion.message}</p>}
@@ -67,7 +74,7 @@ export default function NewGastoFromPage({gasto, gastoC, update}: Props) {
         <div>
             <label className="block font-semibold" htmlFor="categoria">Categoria</label>
             <input type="text" id="categoria"
-                    value={update? gasto?.categoria : ''}
+                    defaultValue={update? gasto?.categoria : ''}
                     {...register('categoria', {required: !update? 'la categoria es obligatoria' :false})}
             />
             {errors.categoria && <p className="text-red-500">{errors.categoria.message}</p>}
@@ -75,7 +82,7 @@ export default function NewGastoFromPage({gasto, gastoC, update}: Props) {
         <div>
             <label className="block font-semibold" htmlFor="monto">Monto</label>
             <input type="text" id="monto" 
-                    value={update? gasto?.monto : 0}
+                    defaultValue={update? gasto?.monto : ''}
                     {...register('monto', {required: !update? 'el monto es obligarorio' : false,
                                            min:{value:0.00000001, message: 'El monto debe ser mayor a cero'}
                     })}
@@ -83,17 +90,17 @@ export default function NewGastoFromPage({gasto, gastoC, update}: Props) {
             {errors.monto && <p className="text-red-500">{errors.monto.message}</p>}
         </div>
         <div>
-            <label className="block font-semibold" htmlFor="fecha">Monto</label>
+            <label className="block font-semibold" htmlFor="fecha">Fecha compra</label>
             <input type="date" id="fecha" 
-                    value={update? gasto?.fecha.toString() : new Date().toISOString()}
+                    defaultValue={update? gasto?.fecha.toISOString().split('T')[0] : new Date().toISOString().split('T')[0]}
                     {...register('fecha', {required: !update? 'el fecha es obligaroria' : false})}
             />
             {errors.fecha && <p className="text-red-500">{errors.fecha?.message}</p>}
         </div>
         <div>
             <label className="block font-semibold" htmlFor="cuota">Cuotas</label>
-            <input type="number" id="cuota" 
-                value={update? gastoC?.cuotas : 0}
+            <input type="text" id="cuota" 
+                defaultValue={gastoC? gastoC.cuotas : ''}
                 {...register('cuota', {required: !update? 'el cuota es obligaroria' : false,
                     min: {value: 1, message: 'las cuotas deben ser mayor que cero'}
                 })}
@@ -123,7 +130,7 @@ export default function NewGastoFromPage({gasto, gastoC, update}: Props) {
             <div>
             <label className="block font-semibold" htmlFor="cuotaActual">Cuota</label>
             <input type="number" id="cuotaVieja" 
-                value={update? gastoC?.cuotaActual : 0}
+                defaultValue={update? gastoC?.cuotaActual! : 0}
                 {...register('cuotaActual', {required: update? 'cuotaActual es obligaroria' : false,
                     min:{value: 0, message: 'la cuota actual debe ser mayor a cero'}
                 })}
