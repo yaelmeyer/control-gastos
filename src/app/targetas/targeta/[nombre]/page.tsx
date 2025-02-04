@@ -1,9 +1,9 @@
-import { getTargetaAndGastos } from "@/actions/targetas/targetasDAO";
+import { deleteGasto, getTargetaAndGastos } from "@/actions/targetas/targetasDAO";
+import BotonDeletePage from "@/components/botonDelete";
 import TargetaMesPage from "@/components/targetaMes";
 import { Targetas } from "@prisma/client";
 import Link from "next/link";
 import { CiEdit } from "react-icons/ci";
-import { RiDeleteBin2Line } from "react-icons/ri";
 
 interface Props{
     params : {nombre:string}
@@ -58,7 +58,7 @@ const calcularDisponibilidad=():number=>{
                   <td className="border border-gray-300 px-4 py-2">{gastoC.cuotas}</td>
                   <td className="border border-gray-300 px-4 py-2">{gastoC.cuotaActual}</td>
                   <td className="border border-gray-300 px-4 py-2"><Link href={`/formularios/newgastoc?update=1&idGastoC=${gastoC.id}`}><CiEdit/></Link></td>
-                  <td className="border border-gray-300 px-4 py-2"><RiDeleteBin2Line/></td>
+                  <td className="border border-gray-300 px-4 py-2"><BotonDeletePage idGasto={gastoC.gasto.id} idGastoC={gastoC.id} targeta={targeta?.nombre}/></td>
                 </tr>
               ))
             }
