@@ -57,8 +57,6 @@ const inicializarTotalMeses = () =>{
                   })}>
                     <h2 className="text-xl font-bold text-gray-800">{mes}</h2>
                     <h2 className="text-lg font-bold text-gray-800">{totalxmes[i]}</h2>
-                    <h2 className="text-lg font-bold text-gray-800">{i}</h2>
-                    <h2 className="text-lg font-bold text-gray-800">{mesActual}</h2>
                 </div>
             ))
         }
