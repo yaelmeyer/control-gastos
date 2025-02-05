@@ -1,6 +1,7 @@
 import { Targetas } from '@prisma/client';
 
 export interface Gasto{
+    id?         : string
     descripcion : string
     monto       : number
     fecha       : Date
@@ -8,6 +9,7 @@ export interface Gasto{
 }
 
 export interface CompraCredito{
+    id?         : string
     cuotas      : number
     targeta     : Targetas
     cuotaActual : number

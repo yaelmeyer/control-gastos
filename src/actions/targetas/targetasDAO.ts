@@ -6,6 +6,24 @@ import { CompraCredito, Gasto } from "@/interfaces/Gasto"
 import { Targetas } from '@prisma/client'
 import { NextResponse } from 'next/server';
 
+export const getGastoC = async(id: string) =>{
+    try {
+        const gastoC = await prisma.gastoC.findFirst({
+            include:{
+                gasto: true
+            },
+            where: {
+                id: id
+            }
+        })
+
+        return gastoC
+    } catch (error) {
+        console.log('error al obtener el gastoC')
+        console.log(error)
+    }
+}
+
 export const newGastoC = async(gasto: Gasto, infoCompra: CompraCredito) =>{
     const {...nuevoGasto} = gasto
     let targeta = await getTargeta(infoCompra.targeta)
@@ -44,6 +62,41 @@ export const newGastoC = async(gasto: Gasto, infoCompra: CompraCredito) =>{
         if(error){
             console.log(''+error)
         }
+    }
+}
+
+export const updateGasto = async (gastoNew: Gasto, infoCompraNew: CompraCredito) =>{
+
+    const {id,...gasto} = gastoNew
+    const {id: idC,targeta, ... infoCompra} = infoCompraNew
+
+    console.log('gasto a actualizar: ', gastoNew)
+    console.log('gastoC a actualizar: ', infoCompraNew)
+
+    const targetaC = await getTargeta(targeta)
+
+    try {
+        const gastoActualizado = await prisma.gasto.update({
+            where: {id: id},
+            data:{
+                ...gasto
+            }
+        })
+
+        const gastoCActualizado = await prisma.gastoC.update({
+            where: {id : idC},
+            data:{
+                ...infoCompra,
+                targetaCId: targetaC?.id
+            }
+        })
+
+        console.log(gastoActualizado)
+        console.log(gastoCActualizado)
+        return
+    } catch (error) {
+        console.log('error actualizando gasto')
+        console.log(''+error)
     }
 }
 
@@ -95,6 +148,27 @@ export const getAllTargetas = async() =>{
         return targetas
     } catch (error) {
         console.log('error al obtener todas las targetas')
+        console.log(''+error)
+    }
+}
+
+export const deleteGasto = async(idGasto:string, idGastoC:string) => {
+    try {
+        const gastoEliminado = await prisma.gasto.delete({
+            where:{
+                id: idGasto
+            }
+        })
+
+        const gastoCEliminado = await prisma.gastoC.delete({
+            where: {
+                id: idGastoC
+            }
+        })
+
+        return [gastoEliminado,gastoCEliminado]
+    } catch (error) {
+        console.log('error al eliminar gastoC')
         console.log(''+error)
     }
 }
