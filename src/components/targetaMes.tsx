@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react"
 import clsx from 'clsx'
+import { inicializarTotalMesesByTargeta } from "@/lib/utils"
 
 interface Props {
   targeta: any
@@ -16,33 +17,11 @@ export default function TargetaMesPage({targeta}: Props) {
   const meses = mesesTotaltes//mesesTotaltes.slice(mesActual)
   
 useEffect(() =>{
-  inicializarTotalMeses()
+  setTotalxmes(inicializarTotalMesesByTargeta(targeta))
   setMesActual( (new Date()).getMonth() )
 }, [])
   //funciones
-const calcularTotalMes = (cont: number) => {
-     let total = 0
 
-     targeta.gastosC.forEach((gastoC:any) =>(
-        total += (gastoC.cuotas >= gastoC.cuotaActual + cont) ? gastoC.gasto.monto/gastoC.cuotas : 0
-     ))
-    console.log('cont: '+cont + ' total: '+total)
-     return +total.toFixed(2)
-}
-
-const inicializarTotalMeses = () =>{
-  let cont = 0;
-  let mes = mesActual
-  let totalxmesAUX = totalxmes
-  for(let cont = 0; cont < 12; cont ++){
-    setTotalxmes( (totalxmes) =>
-      [
-        ...totalxmes,
-        calcularTotalMes(cont)
-      ]
-    )  
-  }
-}
 //fin funciones
 
   return (
