@@ -60,3 +60,8 @@ model TargetaC {
     disponibilidad  Float
     gastosC         GastoC[]
 }
+
+model Categoria {
+    id          String @id @default(auto()) @map("_id") @db.ObjectId
+    descripcion String @unique
+}
