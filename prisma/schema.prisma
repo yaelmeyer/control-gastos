@@ -26,9 +26,9 @@ model Gasto {
     gastoC      GastoC? @relation(fields: [gastoCId], references: [id])
     gastoCId    String? @unique @db.ObjectId
     gastoD      GastoD? @relation(fields: [gastoDId], references: [id])
-    gastoDId    String? @unique @db.ObjectId
+    gastoDId    String?  @db.ObjectId
     gastoE      GastoE? @relation(fields: [gastoEId], references: [id])
-    gastoEId    String? @unique @db.ObjectId
+    gastoEId    String?  @db.ObjectId
 }
 
 model GastoC {
@@ -38,7 +38,7 @@ model GastoC {
     gasto       Gasto?
     terminado   Boolean
     targetaC    TargetaC @relation(fields: [targetaCId], references: [id])
-    targetaCId  String @unique @db.ObjectId
+    targetaCId  String @db.ObjectId
 }
 
 model GastoD {
@@ -64,4 +64,5 @@ model TargetaC {
 model Categoria {
     id          String @id @default(auto()) @map("_id") @db.ObjectId
     descripcion String @unique
+    activa      Boolean @default(false)
 }

@@ -2,6 +2,9 @@
 
 import { getAllCategorias, newCategoria } from "@/actions/targetas/categoriaDAO";
 import BotonDeletePage from "@/components/categorias/botonDelete";
+import CategoriaSlicePage from "@/components/categorias/categoriaSlice";
+import { useAppSelector } from "@/store";
+import clsx from "clsx";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -14,7 +17,7 @@ export default function CategoriasPage() {
     const router = useRouter()
     const {register, handleSubmit, reset,formState:{errors}, watch} = useForm<FormValues>()
     const [categorias, setCategorias] = useState<any>([])
-
+    const categoriasFiltro = useAppSelector((state) => state.categorias.categorias)
     const guardarCategoria = async(data:FormValues) =>{
         await newCategoria(data.descripcion)
 
@@ -34,6 +37,12 @@ export default function CategoriasPage() {
         setCategorias(categorias)
     }
 
+    const esFiltro = (categoria:string)=>{
+        console.log('categoriasFiltro: ', categoriasFiltro)
+        console.log(categoriasFiltro.includes(categoria))
+        return categoriasFiltro.includes(categoria)
+    }
+
   return (
     <div>
     <form onSubmit={handleSubmit(guardarCategoria)} className="space-y-4">
@@ -48,9 +57,15 @@ export default function CategoriasPage() {
         <div className="grid grid-cols-1 gap-4">
             {
                 categorias?.map((categoria:any, index:number) => (
-                    <div key={index} className="bg-gray-200 p-4 rounded-lg">
+                    <div key={index} className={clsx(
+                            "bg-gray-200 p-4 rounded-lg",
+                            {
+                                'bg-blue-200': esFiltro(categoria.descripcion)
+                            }
+                            )}>
                         <h3 className="text-lg font-bold">{categoria.descripcion}</h3>
                         <BotonDeletePage nombre={categoria.descripcion}/>
+                        <CategoriaSlicePage categoria={categoria.descripcion}/>
                     </div>
                 ))
             }

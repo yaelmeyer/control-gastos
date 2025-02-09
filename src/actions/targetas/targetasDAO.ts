@@ -28,7 +28,7 @@ export const newGastoC = async(gasto: Gasto, infoCompra: CompraCredito) =>{
     const {...nuevoGasto} = gasto
     let targeta = await getTargeta(infoCompra.targeta)
     let gastoC = null
-
+    // console.log('targeta: ', targeta)
     try{
         gastoC = await prisma.gastoC.create({ 
             data:{
@@ -41,26 +41,28 @@ export const newGastoC = async(gasto: Gasto, infoCompra: CompraCredito) =>{
             }
         })
     } catch(error){
-        console.log('error al crear gasto')
+        console.log('error al crear gastoC')
         if(error){
             console.log(''+error)
         }
     }
-    try{
-        const gasto = await prisma.gasto.create({
-            data: {
-                ...nuevoGasto,
-                gastoC: {
-                    connect: {id: gastoC?.id}
+    if(gastoC){
+        try{
+            const gasto = await prisma.gasto.create({
+                data: {
+                    ...nuevoGasto,
+                    gastoC: {
+                        connect: {id: gastoC?.id}
+                    }
                 }
+            })
+    
+            return {gasto, gastoC}
+        } catch(error){
+            console.log('error al crear gasto')
+            if(error){
+                console.log(''+error)
             }
-        })
-
-        return {gasto, gastoC}
-    } catch(error){
-        console.log('error al crear gasto de credito')
-        if(error){
-            console.log(''+error)
         }
     }
 }
@@ -70,8 +72,8 @@ export const updateGasto = async (gastoNew: Gasto, infoCompraNew: CompraCredito)
     const {id,...gasto} = gastoNew
     const {id: idC,targeta, ... infoCompra} = infoCompraNew
 
-    console.log('gasto a actualizar: ', gastoNew)
-    console.log('gastoC a actualizar: ', infoCompraNew)
+    // console.log('gasto a actualizar: ', gastoNew)
+    // console.log('gastoC a actualizar: ', infoCompraNew)
 
     const targetaC = await getTargeta(targeta)
 
@@ -91,8 +93,8 @@ export const updateGasto = async (gastoNew: Gasto, infoCompraNew: CompraCredito)
             }
         })
 
-        console.log(gastoActualizado)
-        console.log(gastoCActualizado)
+        // console.log(gastoActualizado)
+        // console.log(gastoCActualizado)
         return
     } catch (error) {
         console.log('error actualizando gasto')
