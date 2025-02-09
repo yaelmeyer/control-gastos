@@ -11,6 +11,9 @@ export default function SideBarPage() {
             <li>
                 <Link href="/formularios/newgastoc" className="block p-2 rounded bg-gray-700 hover:bg-gray-200">Nuevo Gasto</Link>
             </li>
+            <li>
+                <Link href="/categorias" className="block p-2 rounded bg-gray-700 hover:bg-gray-200">categorias</Link>
+            </li>
         </ul>
     </nav>
   );
